@@ -9,14 +9,18 @@ Encode and decode using Base2136 representation
 ---
 
 標準入力から読み込んで標準出力にエンコード
+
 -i: 整数モード、以前のint2b2136相当
+
 -d: デコード
+
 -h: ヘルプ
 
 WASM版のテストページ
 ---
 
 WASMを使ってブラウザ上で動作するようにしてみました。
+
 [BS2136 Encoder/Decoder](https://masanork.github.io/bs2136-wasm/Test.html)
 
 謝辞
