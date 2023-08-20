@@ -16,13 +16,6 @@ Encode and decode using Base2136 representation
 
 -h: ヘルプ
 
-WASM版のテストページ
----
-
-WASMを使ってブラウザ上で動作するようにしてみました。
-
-[BS2136 Encoder/Decoder](https://masanork.github.io/bs2136-wasm/Test.html)
-
 謝辞
 ---
 
