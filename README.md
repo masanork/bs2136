@@ -8,7 +8,8 @@ Encode and decode using Base2136 representation
 ブラウザ上での動作デモ (WASM)
 ---
 
-[BASE2136デモ画面]https://masanork.github.io/bs2136-wasm/
+自前でRustのビルド環境を用意できない方も、ブラウザ上のWASMで動作するデモを用意しました。
+[BASE2136デモ画面](https://masanork.github.io/bs2136-wasm/)
 
 使い方
 ---
