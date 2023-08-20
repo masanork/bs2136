@@ -1,5 +1,5 @@
-use std::io::{self, Read, Write};
 use std::env;
+use std::io::{self, Read, Write};
 
 const JOYOKANJI: &str = include_str!("joyokanji.txt");
 const CHUNK_SIZE_BITS: u64 = 44;
@@ -23,7 +23,10 @@ fn decode_block(kanji_str: &str) -> u64 {
     let mut result = 0u64;
 
     for kanji in kanji_str.chars() {
-        let index = kanji_chars.iter().position(|&c| c == kanji).expect("Kanji not found!");
+        let index = kanji_chars
+            .iter()
+            .position(|&c| c == kanji)
+            .expect("Kanji not found!");
         result = result * 2136 + index as u64;
     }
 
@@ -112,7 +115,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.contains(&"-h".to_string()) {
-        println!("Usage: kanji_converter [-d] [-i] [-h]");
+        println!("Usage: bs2136 [-d] [-i] [-h]");
         println!("-d: Convert from kanji to byte stream/integer");
         println!("-i: Use integer input/output mode");
         println!("-h: Display this help");
