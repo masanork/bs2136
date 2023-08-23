@@ -4,6 +4,7 @@ use std::io::{self, Read, Write};
 const JOYOKANJI: &str = include_str!("joyokanji.txt");
 const CHUNK_SIZE_BITS: u64 = 44;
 const MAX_CHUNK_VALUE: u64 = (1 << CHUNK_SIZE_BITS) - 1;
+const MAX_ENCODEABLE_INT: u64 = 2136u64.pow(4) - 1;
 
 fn encode_single_block(mut n: u64) -> String {
     let kanji_chars: Vec<char> = JOYOKANJI.chars().collect();
@@ -33,24 +34,19 @@ fn decode_block(kanji_str: &str) -> u64 {
     result
 }
 
-fn encode_integer(n: u64) -> String {
-    let mut number = n;
-    let mut result = String::new();
-
-    while number > 0 {
-        let chunk = number & MAX_CHUNK_VALUE;
-        result = encode_single_block(chunk) + &result;
-        number >>= CHUNK_SIZE_BITS;
+fn encode_integer(n: u64) -> Result<String, &'static str> {
+    if n > MAX_ENCODEABLE_INT {
+        return Err("Overflow error: Integer too large to be encoded with 4 kanji characters");
     }
 
-    if result.is_empty() {
-        return encode_single_block(0);
-    }
-
-    result
+    Ok(encode_single_block(n))
 }
 
-fn decode_integer(encoded: &str) -> u64 {
+fn decode_integer(encoded: &str) -> Result<u64, &'static str> {
+    if encoded.len() > 4 {
+        return Err("Overflow error: Kanji string too long to be decoded as an integer");
+    }
+
     let kanji_vec = encoded.chars().collect::<Vec<_>>();
     let blocks = kanji_vec.chunks(4);
     let mut result = 0u64;
@@ -61,7 +57,7 @@ fn decode_integer(encoded: &str) -> u64 {
         result += decode_block(&block_str);
     }
 
-    result
+    Ok(result)
 }
 
 fn encode_bytestream(input: &[u8]) -> String {
@@ -128,7 +124,11 @@ fn main() {
         if use_integer_mode {
             let mut input = String::new();
             io::stdin().read_line(&mut input).unwrap();
-            println!("{}", decode_integer(&input.trim()));
+
+            match decode_integer(&input.trim()) {
+                Ok(decoded) => println!("{}", decoded),
+                Err(err) => eprintln!("{}", err),
+            }
         } else {
             let mut input = String::new();
             io::stdin().read_to_string(&mut input).unwrap();
@@ -139,8 +139,12 @@ fn main() {
         if use_integer_mode {
             let mut input = String::new();
             io::stdin().read_line(&mut input).unwrap();
-            let _number: u64 = input.trim().parse().expect("Failed to parse number!");
-            println!("{}", encode_integer(_number));
+            let number: u64 = input.trim().parse().expect("Failed to parse number!");
+            
+            match encode_integer(number) {
+                Ok(encoded) => println!("{}", encoded),
+                Err(err) => eprintln!("{}", err),
+            }
         } else {
             let mut input = Vec::new();
             io::stdin().read_to_end(&mut input).unwrap();
