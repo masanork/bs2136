@@ -16,10 +16,9 @@ Encode and decode using Base2136 representation
 
 標準入力から読み込んで標準出力にエンコード
 
--i: 整数モード、以前のint2b2136相当
-
+-i: 整数モード
 -d: デコード
-
+-e: エンコード
 -h: ヘルプ
 
 謝辞

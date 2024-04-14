@@ -113,12 +113,20 @@ fn main() {
     if args.contains(&"-h".to_string()) {
         println!("Usage: bs2136 [-d] [-i] [-h]");
         println!("-d: Convert from kanji to byte stream/integer");
+        println!("-e: Convert from byte stream to kanji");
         println!("-i: Use integer input/output mode");
         println!("-h: Display this help");
         return;
     }
 
     let use_integer_mode = args.contains(&"-i".to_string());
+
+    if args.contains(&"-e".to_string()) {
+        let mut input = Vec::new();
+        io::stdin().read_to_end(&mut input).unwrap();
+        let encoded = encode_bytestream(&input);
+        io::stdout().write_all(encoded.as_bytes()).unwrap();
+    }
 
     if args.contains(&"-d".to_string()) {
         if use_integer_mode {
